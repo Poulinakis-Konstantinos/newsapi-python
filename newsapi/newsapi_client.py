@@ -176,6 +176,7 @@ class NewsApiClient(object):
         qintitle=None,
         sources=None,
         domains=None,
+        category=None,
         exclude_domains=None,
         from_param=None,
         to=None,
@@ -208,6 +209,11 @@ class NewsApiClient(object):
         :param exclude_domains:  A comma-seperated string of domains (eg bbc.co.uk, techcrunch.com, engadget.com)
             to remove from the results.
         :type exclude_domains: str or None
+
+        :param category: The category you want to get headlines for.
+        See :data:`newsapi.const.categories` for the set of allowed values.
+        **Note**: you can't mix this parameter with the ``sources`` param.
+        :type category: str or None
 
         :param from_param: A date and optional time for the oldest article allowed.
             If a str, the format must conform to ISO-8601 specifically as one of either
@@ -271,6 +277,12 @@ class NewsApiClient(object):
                 payload["domains"] = domains
             else:
                 raise TypeError("domains param should be of type str")
+
+        if category is not None:
+            if is_valid_string(category):
+                payload['category'] = category
+            else:
+                raise TypeError("category param should be of type str")
 
         if exclude_domains is not None:
             if isinstance(exclude_domains, str):
